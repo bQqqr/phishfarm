@@ -26,12 +26,10 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#-features">Features</a></li>
-    <li><a href="#-built-with">Built With</a></li>
-    <li><a href="#-contributing">Contributing</a></li>
-    <li><a href="#-license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#-features">🍇 Features</a></li>
+    <li><a href="#-built-with">⚙️ Built With</a></li>
+    <li><a href="#-contributing">🫂 Contributing</a></li>
+    <li><a href="#-license">⚠️ License</a></li>
   </ol>
 </details>
 
@@ -42,7 +40,7 @@
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## ⚙️ Build With
+## ⚙️ Built With
 
 - [.NET6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 - [React](https://reactjs.org/)
