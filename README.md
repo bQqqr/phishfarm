@@ -7,7 +7,6 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -83,4 +82,5 @@ Distributed under the GNU General Public License v3.0 License. See `LICENSE` for
 [issues-shield]: https://img.shields.io/github/issues/christoskaltsas/phishfarm.svg?style=for-the-badge
 [issues-url]: https://github.com/christoskaltsas/phishfarm/issues
 [license-shield]: https://img.shields.io/github/license/christoskaltsas/phishfarm.svg?style=for-the-badge
+[license-url]: https://github.com/christoskaltsas/phishfarm/blob/master/LICENSE
 [product-screenshot]: images/screenshot.png
