@@ -2,7 +2,7 @@ using Farm.Services.Email;
 using FastEndpoints;
 using FastEndpoints.Validation;
 
-namespace Farm.Api.Admin;
+namespace Farm.Endpoints.Admin;
 
 public class ConfigureEmailRequest
 {
