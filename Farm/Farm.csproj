@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FastEndpoints" Version="3.8.0" />
+    <PackageReference Include="FastEndpoints.Security" Version="3.8.0" />
     <PackageReference Include="FastEndpoints.Swagger" Version="3.8.0" />
   </ItemGroup>
 

@@ -7,6 +7,16 @@ namespace Farm.Services.Email;
 public class EmailService : IEmailService
 {
     /// <summary>
+    /// It represents whether the EmailService is configured or not.
+    /// </summary>
+    private bool _isConfigured = false;
+
+    /// <summary>
+    /// It represents whether SSL is enabled or not.
+    /// </summary>
+    private bool _enabledSsl;
+
+    /// <summary>
     /// It represents the domain name of the SMTP server.
     /// </summary>
     private string? _smtpHost = String.Empty;
@@ -45,6 +55,7 @@ public class EmailService : IEmailService
     /// Use this method to configure EmailService.
     /// </summary>
     public void Configure(
+        bool enabledSsl,
         string? smtpHost,
         int smtpPort,
         string? smtpUsername,
@@ -53,6 +64,7 @@ public class EmailService : IEmailService
         string? fromName,
         string? subject)
     {
+        _enabledSsl = enabledSsl;
         _smtpHost = smtpHost;
         _smtpPort = smtpPort;
         _smtpUsername = smtpUsername;
@@ -60,8 +72,15 @@ public class EmailService : IEmailService
         _fromEmail = fromEmail;
         _fromName = fromName;
         _subject = subject;
+
+        _isConfigured = true;
     }
 
+    public bool IsConfigured() => _isConfigured;
+
+    /// <summary>
+    /// Use this method to send an email message.
+    /// </summary>
     public void SendEmail(string recipientEmail, string emailBody)
     {
         try
@@ -69,7 +88,7 @@ public class EmailService : IEmailService
             var sc = new SmtpClient(_smtpHost, _smtpPort);
             sc.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
             sc.DeliveryMethod = SmtpDeliveryMethod.Network;
-            sc.EnableSsl = true;
+            sc.EnableSsl = _enabledSsl;
 
             var m = new MailMessage();
             m.From = new MailAddress(_fromEmail!, _fromName);
