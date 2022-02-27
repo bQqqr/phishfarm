@@ -43,7 +43,7 @@ public class ConfigureEmailEndpoint : Endpoint<ConfigureEmailRequest>
     public override void Configure()
     {
         Verbs(Http.POST);
-        Routes("/api/operator/actions/configure-email");
+        Routes("/api/operator/configure-email");
         Roles("Admin");
     }
 

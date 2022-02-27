@@ -32,7 +32,7 @@ public class TestEmailEndpoint : Endpoint<TestEmailRequest>
     public override void Configure()
     {
         Verbs(Http.POST);
-        Routes("/api/operator/actions/test-email");
+        Routes("/api/operator/test-email");
         Roles("Admin");
     }
 

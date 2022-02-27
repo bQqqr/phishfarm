@@ -35,7 +35,7 @@ public class AuthenticateEndpoint : Endpoint<AuthenticateRequest, AuthenticateRe
     public override void Configure()
     {
         Verbs(Http.POST);
-        Routes("/api/operator/actions/authenticate");
+        Routes("/api/operator/authenticate");
         AllowAnonymous();
     }
 

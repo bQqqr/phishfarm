@@ -2,7 +2,6 @@ namespace Farm.Services.Email;
 
 public interface IEmailService
 {
-
     void Configure(
         bool enabledSsl,
         string? smtpHost,
@@ -12,7 +11,7 @@ public interface IEmailService
         string? fromEmail,
         string? fromName,
         string? subject);
-    bool IsConfigured();
 
+    bool IsConfigured();
     void SendEmail(string recipientEmail, string emailBody);
 }

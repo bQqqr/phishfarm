@@ -6,54 +6,16 @@ namespace Farm.Services.Email;
 
 public class EmailService : IEmailService
 {
-    /// <summary>
-    /// It represents whether the EmailService is configured or not.
-    /// </summary>
     private bool _isConfigured = false;
-
-    /// <summary>
-    /// It represents whether SSL is enabled or not.
-    /// </summary>
     private bool _enabledSsl;
-
-    /// <summary>
-    /// It represents the domain name of the SMTP server.
-    /// </summary>
     private string? _smtpHost = String.Empty;
-
-    /// <summary>
-    /// It represents the SMTP port number of the SMTP server.
-    /// </summary>
     private int _smtpPort;
-
-    /// <summary>
-    /// It represents the username that is needed for authentication.
-    /// </summary>
     private string? _smtpUsername = String.Empty;
-
-    /// <summary>
-    /// It represents the password that is needed for authentication.
-    /// </summary>
     private string? _smtpPassword = String.Empty;
-
-    /// <summary>
-    /// It represents the sender's display email address.
-    /// </summary>
     private string? _fromEmail = String.Empty;
-
-    /// <summary>
-    /// It represents the sender's display name.
-    /// </summary>
     private string? _fromName = String.Empty;
-
-    /// <summary>
-    /// It represents the email message's subject.
-    /// </summary>
     private string? _subject = String.Empty;
 
-    /// <summary>
-    /// Use this method to configure EmailService.
-    /// </summary>
     public void Configure(
         bool enabledSsl,
         string? smtpHost,
@@ -78,9 +40,6 @@ public class EmailService : IEmailService
 
     public bool IsConfigured() => _isConfigured;
 
-    /// <summary>
-    /// Use this method to send an email message.
-    /// </summary>
     public void SendEmail(string recipientEmail, string emailBody)
     {
         try
