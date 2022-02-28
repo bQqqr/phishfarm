@@ -6,53 +6,87 @@ namespace Farm.Services.Email;
 
 public class EmailService : IEmailService
 {
-    private bool _isConfigured = false;
-    private bool _enabledSsl;
-    private string? _smtpHost = String.Empty;
-    private int _smtpPort;
-    private string? _smtpUsername = String.Empty;
-    private string? _smtpPassword = String.Empty;
-    private string? _fromEmail = String.Empty;
-    private string? _fromName = String.Empty;
-    private string? _subject = String.Empty;
+    public bool IsConfigured { get; set; } = false;
+    public bool EnabledSsl { get; set; } = false;
+    public string SmtpHost { get; set; } = String.Empty;
+    public int SmtpPort { get; set; } = 587;
+    public string SmtpUsername { get; set; } = String.Empty;
+    public string SmtpPassword { get; set; } = String.Empty;
+    public string FromEmail { get; set; } = String.Empty;
+    public string FromName { get; set; } = String.Empty;
+    public string Subject { get; set; } = String.Empty;
 
     public void Configure(
         bool enabledSsl,
-        string? smtpHost,
+        string smtpHost,
         int smtpPort,
-        string? smtpUsername,
-        string? smtpPassword,
-        string? fromEmail,
-        string? fromName,
-        string? subject)
+        string smtpUsername,
+        string smtpPassword,
+        string fromEmail,
+        string fromName,
+        string subject)
     {
-        _enabledSsl = enabledSsl;
-        _smtpHost = smtpHost;
-        _smtpPort = smtpPort;
-        _smtpUsername = smtpUsername;
-        _smtpPassword = smtpPassword;
-        _fromEmail = fromEmail;
-        _fromName = fromName;
-        _subject = subject;
+        EnabledSsl = enabledSsl;
+        SmtpHost = smtpHost;
+        SmtpPort = smtpPort;
+        SmtpUsername = smtpUsername;
+        SmtpPassword = smtpPassword;
+        FromEmail = fromEmail;
+        FromName = fromName;
+        Subject = subject;
 
-        _isConfigured = true;
+        IsConfigured = true;
     }
 
-    public bool IsConfigured() => _isConfigured;
+    public void TestEmail(
+        bool enabledSsl,
+        string smtpHost,
+        int smtpPort,
+        string smtpUsername,
+        string smtpPassword,
+        string fromEmail,
+        string fromName,
+        string subject,
+        string recipientEmail,
+        string emailBody)
+    {
+        try
+        {
+            var sc = new SmtpClient(smtpHost, smtpPort);
+            sc.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
+            sc.DeliveryMethod = SmtpDeliveryMethod.Network;
+            sc.EnableSsl = enabledSsl;
+
+            var m = new MailMessage();
+            m.From = new MailAddress(fromEmail, fromName);
+            m.To.Add(new MailAddress(recipientEmail));
+            m.Subject = subject;
+            m.SubjectEncoding = Encoding.UTF8;
+            m.Body = emailBody;
+            m.BodyEncoding = Encoding.UTF8;
+            m.IsBodyHtml = true;
+
+            sc.Send(m);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"EmailService Exception: {ex.Message}");
+        }
+    }
 
     public void SendEmail(string recipientEmail, string emailBody)
     {
         try
         {
-            var sc = new SmtpClient(_smtpHost, _smtpPort);
-            sc.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
+            var sc = new SmtpClient(SmtpHost, SmtpPort);
+            sc.Credentials = new NetworkCredential(SmtpUsername, SmtpPassword);
             sc.DeliveryMethod = SmtpDeliveryMethod.Network;
-            sc.EnableSsl = _enabledSsl;
+            sc.EnableSsl = EnabledSsl;
 
             var m = new MailMessage();
-            m.From = new MailAddress(_fromEmail!, _fromName);
+            m.From = new MailAddress(FromEmail, FromName);
             m.To.Add(new MailAddress(recipientEmail));
-            m.Subject = _subject;
+            m.Subject = Subject;
             m.SubjectEncoding = Encoding.UTF8;
             m.Body = emailBody;
             m.BodyEncoding = Encoding.UTF8;

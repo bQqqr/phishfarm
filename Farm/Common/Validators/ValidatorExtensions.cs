@@ -1,6 +1,6 @@
 using FastEndpoints.Validation;
 
-namespace Athena.Application.Common.Validators;
+namespace Farm.Common.Validators;
 
 public static class ValidatorExtensions
 {

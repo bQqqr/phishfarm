@@ -1,10 +1,10 @@
-namespace Farm.Services.Campaign;
+namespace Farm.Models;
 
 public class Target
 {
-    public string? Guid { get; set; }
+    public int TargetId { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? EmailAddress { get; set; }
-    public IFormFile? Maldoc { get; set; }
+    public List<Event> Events { get; set; } = new List<Event>();
 }
