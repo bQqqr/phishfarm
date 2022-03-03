@@ -1,6 +1,6 @@
 import { ITemplate } from './domains';
 
-export interface AddTargetRequest {
+export interface IAddTargetRequest {
   firstName: string;
   lastName: string;
   emailAddress: string;

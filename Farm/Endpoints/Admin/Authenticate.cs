@@ -57,7 +57,7 @@ public class AuthenticateEndpoint : Endpoint<AuthenticateRequest, AuthenticateRe
             .Get<string>();
 
         if (req.Password != p)
-            throw new ForbiddenAccessException();
+            throw new UnauthorizedAccessException();
 
         var symmetricKey = _configuration
             .GetSection("SymmetricKey")

@@ -47,7 +47,7 @@ public class SendTestEmailEndpoint : Endpoint<SendTestEmailRequest>
     {
         _emailService.SendEmail(req.RecipientEmail);
 
-        await SendOkAsync();
+        await SendNoContentAsync();
     }
 }
 #endregion

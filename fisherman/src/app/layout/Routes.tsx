@@ -1,16 +1,10 @@
-import { lazy } from 'react';
 import { Route, Routes as Switch } from 'react-router-dom';
-
-const Config = lazy(() =>
-  import('features/config').then((mod) => ({
-    default: mod.Setup,
-  })),
-);
+import { Setup } from 'features/configuration';
 
 export const Routes = () => {
   return (
     <Switch>
-      <Route path="/" element={<Config />} />
+      <Route path="/" element={<Setup />} />
     </Switch>
   );
 };

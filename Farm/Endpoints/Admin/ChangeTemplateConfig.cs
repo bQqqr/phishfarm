@@ -51,7 +51,7 @@ public class ChangeTemplateConfigEndpoint : Endpoint<ChangeTemplateConfigRequest
         _emailService.Config.Template.Html = req.Html;
         _emailService.Config.IsConfigured = true;
 
-        await SendOkAsync();
+        await SendNoContentAsync();
     }
 }
 #endregion

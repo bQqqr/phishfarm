@@ -1,5 +1,6 @@
 using System.Net;
 using Farm.Common.Exceptions;
+using FastEndpoints.Validation;
 using Newtonsoft.Json;
 
 namespace Farm.Common.Middleware;
@@ -33,19 +34,10 @@ public class CustomExceptionHandlerMiddleware
 
         switch (exception)
         {
-            case ForbiddenAccessException forbiddenAccessException:
+            case UnauthorizedAccessException unauthorizedAccessException:
                 code = HttpStatusCode.Unauthorized;
-                result = forbiddenAccessException.Message;
                 break;
-            case ValidationException validationException:
-                code = HttpStatusCode.BadRequest;
-                result = JsonConvert.SerializeObject(validationException.Errors);
-                break;
-            case BadRequestException badRequestException:
-                code = HttpStatusCode.BadRequest;
-                result = badRequestException.Message;
-                break;
-            case NotFoundException _:
+            case NotFoundException notFoundException:
                 code = HttpStatusCode.NotFound;
                 break;
         }
@@ -55,7 +47,7 @@ public class CustomExceptionHandlerMiddleware
 
         if (result == string.Empty)
         {
-            result = JsonConvert.SerializeObject(new { error = exception.Message });
+            result = JsonConvert.SerializeObject(new { errors = exception.Message });
         }
 
         return context.Response.WriteAsync(result);

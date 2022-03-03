@@ -1,31 +1,75 @@
 import { useToast } from '@chakra-ui/react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
+  IAddTargetRequest,
   IAddTargetResponse,
   IAuthenticateRequest,
   IAuthenticateResponse,
   IChangeEmailConfigRequest,
   IChangeTemplateConfigRequest,
-  IRemoveTargetRequest,
-} from 'app/interfaces';
-import { apiAtom, jwtAtom } from 'app/global';
-import {
-  IAddTargetRequest,
   IEmailConfig,
+  IRemoveTargetRequest,
+  ISendTestEmailRequest,
   ITarget,
   ITemplate,
-} from 'features/config';
+} from 'app/interfaces';
+import { apiAtom, isAuthAtom, jwtAtom } from 'app/global';
 
 export const useAgent = () => {
-  const [api] = useRecoilState(apiAtom);
-  const [jwt] = useRecoilState(jwtAtom);
   const toast = useToast();
+  const [api, setApi] = useRecoilState(apiAtom);
+  const [jwt, setJwt] = useRecoilState(jwtAtom);
+  const setIsAuth = useSetRecoilState(isAuthAtom);
   const baseUrl = `https://${api}/api`;
 
   type Result<T> = {
-    state: 'Fail' | 'Success';
-    statusCode: number;
-    data: T;
+    status: number;
+    data: T | null;
+  };
+
+  const handleResponse = async <T>(response: Response) => {
+    const statusCode = response.status;
+    var result = {
+      status: statusCode,
+      data: null,
+    } as Result<T>;
+
+    switch (statusCode) {
+      case 204:
+        return result;
+      case 200:
+        result.data = (await response.json()) as T;
+        return result;
+      case 401:
+        agent.logout();
+        return result;
+      case 400:
+        toast({
+          status: 'error',
+          title: 'Validation Erros',
+          description: `${JSON.stringify(await response.json())}`,
+          isClosable: true,
+          duration: 2000,
+        });
+        return result;
+      default:
+        return result;
+    }
+  };
+
+  const handleException = async <T>(exception: any) => {
+    toast({
+      title: 'Exception',
+      description: exception?.message,
+      status: 'error',
+      isClosable: true,
+      duration: 2000,
+    });
+
+    return {
+      status: 0,
+      data: null,
+    } as Result<T>;
   };
 
   const requests = {
@@ -36,30 +80,8 @@ export const useAgent = () => {
           authorization: `Bearer ${jwt}`,
         },
       })
-        .then(async (response) => {
-          const statusCode = response.status;
-          const data = await response.json();
-
-          return {
-            state: 'Success',
-            statusCode: statusCode,
-            data: data,
-          } as Result<T>;
-        })
-        .catch((ex) => {
-          toast({
-            title: ex.message,
-            status: 'error',
-            isClosable: true,
-            duration: 2000,
-          });
-
-          return {
-            state: 'Fail',
-            statusCode: 0,
-            data: {},
-          } as Result<T>;
-        }),
+        .then((resp) => handleResponse<T>(resp))
+        .catch((ex) => handleException<T>(ex)),
     post: <T>(resource: string, body: {}) =>
       fetch(baseUrl + resource, {
         method: 'POST',
@@ -69,29 +91,8 @@ export const useAgent = () => {
         },
         body: JSON.stringify(body),
       })
-        .then(async (response) => {
-          const statusCode = response.status;
-          const body = await response.json();
-          return {
-            state: 'Success',
-            statusCode: statusCode,
-            data: body,
-          } as Result<T>;
-        })
-        .catch((ex) => {
-          toast({
-            title: ex.message,
-            status: 'error',
-            isClosable: true,
-            duration: 2000,
-          });
-
-          return {
-            state: 'Fail',
-            statusCode: 0,
-            data: {},
-          } as Result<T>;
-        }),
+        .then((resp) => handleResponse<T>(resp))
+        .catch((ex) => handleException<T>(ex)),
     put: <T>(resource: string, body: {}) =>
       fetch(baseUrl + resource, {
         method: 'PUT',
@@ -101,30 +102,8 @@ export const useAgent = () => {
         },
         body: JSON.stringify(body),
       })
-        .then(async (response) => {
-          const statusCode = response.status;
-          const data = await response.json();
-
-          return {
-            state: 'Success',
-            statusCode: statusCode,
-            data: data,
-          } as Result<T>;
-        })
-        .catch((ex) => {
-          toast({
-            title: ex.message,
-            status: 'error',
-            isClosable: true,
-            duration: 2000,
-          });
-
-          return {
-            state: 'Fail',
-            statusCode: 0,
-            data: {},
-          } as Result<T>;
-        }),
+        .then((resp) => handleResponse<T>(resp))
+        .catch((ex) => handleException<T>(ex)),
     del: <T>(resource: string) =>
       fetch(baseUrl + resource, {
         method: 'DELETE',
@@ -132,34 +111,19 @@ export const useAgent = () => {
           authorization: `Bearer ${jwt}`,
         },
       })
-        .then(async (response) => {
-          const statusCode = response.status;
-          const data = await response.json();
-
-          return {
-            state: 'Success',
-            statusCode: statusCode,
-            data: data,
-          } as Result<T>;
-        })
-        .catch((ex) => {
-          toast({
-            title: ex.message,
-            status: 'error',
-            isClosable: true,
-            duration: 2000,
-          });
-
-          return {
-            state: 'Fail',
-            statusCode: 0,
-            data: {},
-          } as Result<T>;
-        }),
+        .then((resp) => handleResponse<T>(resp))
+        .catch((ex) => handleException<T>(ex)),
   };
 
   const agent = {
-    testEmail: (req: IAddTargetRequest) =>
+    logout: () => {
+      localStorage.clear();
+      setApi('');
+      setJwt('');
+      setIsAuth(false);
+      window.location.reload();
+    },
+    testEmail: (req: ISendTestEmailRequest) =>
       requests.post<void>('/actions/test-email', req),
     authenticate: (req: IAuthenticateRequest) =>
       requests.post<IAuthenticateResponse>('/auth', req),
@@ -169,11 +133,11 @@ export const useAgent = () => {
     delTarget: (req: IRemoveTargetRequest) =>
       requests.del(`/campaign/targets/${req.targetId}`),
     changeEmailConf: (req: IChangeEmailConfigRequest) =>
-      requests.post('/api/email-config', req),
-    readEmailConf: () => requests.get<IEmailConfig>('/api/email-config'),
+      requests.post('/email-config', req),
+    readEmailConf: () => requests.get<IEmailConfig>('/email-config'),
     changeTemplate: (req: IChangeTemplateConfigRequest) =>
-      requests.post('/api/template', req),
-    readTemplate: () => requests.get<ITemplate>('/api/template'),
+      requests.post('/template', req),
+    readTemplate: () => requests.get<ITemplate>('/template'),
   };
 
   return { agent };

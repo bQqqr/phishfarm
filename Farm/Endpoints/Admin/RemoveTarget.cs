@@ -38,6 +38,6 @@ public class RemoveTargetEndpoint : Endpoint<RemoveTargetRequest>
 
         _campaignService.Targets.Remove(t!);
 
-        await SendOkAsync();
+        await SendNoContentAsync();
     }
 }

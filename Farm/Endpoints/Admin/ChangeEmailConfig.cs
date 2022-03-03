@@ -69,7 +69,7 @@ public class ChangeEmailConfigEndpoint : Endpoint<ChangeEmailConfigRequest>
         _emailService.Config.Subject = req.Subject;
         _emailService.Config.IsConfigured = true;
 
-        await SendOkAsync();
+        await SendNoContentAsync();
     }
 }
 #endregion
