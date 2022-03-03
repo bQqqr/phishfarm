@@ -5,24 +5,31 @@ using FastEndpoints.Validation;
 
 namespace Farm.Endpoints.Admin;
 
+#region Request
 public class AuthenticateRequest
 {
-    public string? Password { get; set; }
+    public string Password { get; set; } = String.Empty;
 }
+#endregion
 
+#region Validator
 public class AuthenticateRequestValidator : Validator<AuthenticateRequest>
 {
     public AuthenticateRequestValidator()
     {
-        RuleFor(r => r.Password).Length(1, 256);
+        RuleFor(r => r.Password).NotEmpty().Length(1, 256);
     }
 }
+#endregion
 
+#region Response
 public class AuthenticateResponse
 {
-    public string? Token { get; set; }
+    public string Token { get; set; } = String.Empty;
 }
+#endregion
 
+#region Endpoint
 public class AuthenticateEndpoint : Endpoint<AuthenticateRequest, AuthenticateResponse>
 {
     private readonly IConfiguration _configuration;
@@ -35,17 +42,27 @@ public class AuthenticateEndpoint : Endpoint<AuthenticateRequest, AuthenticateRe
     public override void Configure()
     {
         Verbs(Http.POST);
-        Routes("/api/operator/authenticate");
+        Routes("/api/auth");
         AllowAnonymous();
+        Describe(e => e
+            .Accepts<AuthenticateRequest>("application/json")
+            .Produces<AuthenticateResponse>(200)
+            .ProducesProblem(401));
     }
 
     public override Task HandleAsync(AuthenticateRequest req, CancellationToken ct)
     {
-        var password = _configuration.GetSection("Password").Get<string>();
-        if (req.Password != password)
+        var p = _configuration
+            .GetSection("Password")
+            .Get<string>();
+
+        if (req.Password != p)
             throw new ForbiddenAccessException();
 
-        var symmetricKey = _configuration.GetSection("SymmetricKey").Get<string>();
+        var symmetricKey = _configuration
+            .GetSection("SymmetricKey")
+            .Get<string>();
+
         Response.Token = JWTBearer.CreateToken(
                 signingKey: symmetricKey,
                 expireAt: DateTime.UtcNow.AddMinutes(20),
@@ -54,3 +71,4 @@ public class AuthenticateEndpoint : Endpoint<AuthenticateRequest, AuthenticateRe
         return Task.CompletedTask;
     }
 }
+#endregion

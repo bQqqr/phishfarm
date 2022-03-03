@@ -35,6 +35,7 @@ public class CustomExceptionHandlerMiddleware
         {
             case ForbiddenAccessException forbiddenAccessException:
                 code = HttpStatusCode.Unauthorized;
+                result = forbiddenAccessException.Message;
                 break;
             case ValidationException validationException:
                 code = HttpStatusCode.BadRequest;

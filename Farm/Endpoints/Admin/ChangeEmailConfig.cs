@@ -5,7 +5,8 @@ using FastEndpoints.Validation;
 
 namespace Farm.Endpoints.Admin;
 
-public class ConfigureEmailRequest
+#region Request
+public class ChangeEmailConfigRequest
 {
     public bool EnabledSsl { get; set; } = false;
     public string SmtpHost { get; set; } = String.Empty;
@@ -16,10 +17,12 @@ public class ConfigureEmailRequest
     public string FromName { get; set; } = String.Empty;
     public string Subject { get; set; } = String.Empty;
 }
+#endregion
 
-public class ConfigureEmailRequestValidator : Validator<ConfigureEmailRequest>
+#region Validator
+public class ChangeEmailConfigValidator : Validator<ChangeEmailConfigRequest>
 {
-    public ConfigureEmailRequestValidator()
+    public ChangeEmailConfigValidator()
     {
         RuleFor(r => r.SmtpHost).NotEmpty().MaximumLength(253).HostnameOrIpAddress();
         RuleFor(r => r.SmtpPort).InclusiveBetween(0, 65535);
@@ -30,12 +33,14 @@ public class ConfigureEmailRequestValidator : Validator<ConfigureEmailRequest>
         RuleFor(r => r.Subject).NotEmpty().MaximumLength(998);
     }
 }
+#endregion
 
-public class ConfigureEmailEndpoint : Endpoint<ConfigureEmailRequest>
+#region Endpoint
+public class ChangeEmailConfigEndpoint : Endpoint<ChangeEmailConfigRequest>
 {
     private readonly IEmailService _emailService;
 
-    public ConfigureEmailEndpoint(IEmailService emailService)
+    public ChangeEmailConfigEndpoint(IEmailService emailService)
     {
         _emailService = emailService;
     }
@@ -43,23 +48,28 @@ public class ConfigureEmailEndpoint : Endpoint<ConfigureEmailRequest>
     public override void Configure()
     {
         Verbs(Http.POST);
-        Routes("/api/operator/configure-email");
+        Routes("/api/email-config");
         Roles("Admin");
+        Describe(e => e
+            .Accepts<ChangeEmailConfigRequest>("application/json")
+            .Produces(200)
+            .ProducesProblem(401)
+            .ProducesProblem(400));
     }
 
-    public override Task HandleAsync(ConfigureEmailRequest req, CancellationToken ct)
+    public override async Task HandleAsync(ChangeEmailConfigRequest req, CancellationToken ct)
     {
-        _emailService.Configure(
-            req.EnabledSsl,
-            req.SmtpHost,
-            req.SmtpPort,
-            req.SmtpUsername,
-            req.SmtpPassword,
-            req.FromEmail,
-            req.FromName,
-            req.Subject
-        );
+        _emailService.Config.EnabledSsl = req.EnabledSsl;
+        _emailService.Config.SmtpHost = req.SmtpHost;
+        _emailService.Config.SmtpPort = req.SmtpPort;
+        _emailService.Config.SmtpUsername = req.SmtpUsername;
+        _emailService.Config.SmtpPassword = req.SmtpPassword;
+        _emailService.Config.FromEmail = req.FromEmail;
+        _emailService.Config.FromName = req.FromName;
+        _emailService.Config.Subject = req.Subject;
+        _emailService.Config.IsConfigured = true;
 
-        return Task.CompletedTask;
+        await SendOkAsync();
     }
 }
+#endregion

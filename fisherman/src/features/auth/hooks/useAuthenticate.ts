@@ -1,50 +1,44 @@
-import { useContext } from 'react';
+import { useRecoilState } from 'recoil';
 import { useToast } from '@chakra-ui/react';
-import { AppCtx } from 'app/context';
+import { isAuthAtom, jwtAtom } from 'app/global';
+import { useAgent } from 'app/hooks';
 
 export const useAuthenticate = () => {
   // Hooks
-  const auth = useContext(AppCtx);
+  const [, setJwt] = useRecoilState(jwtAtom);
+  const [, setIsAuth] = useRecoilState(isAuthAtom);
+  const { agent } = useAgent();
   const toast = useToast();
 
-  // Definitions
-  async function authenticate(host: string, pw: string) {
-    try {
-      const response = await fetch(`https://${host}/api/operator/authenticate`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json;charset=UTF-8' },
-        body: JSON.stringify({ Password: pw }),
-      });
+  // Functions
+  function onNotAuthenticated() {
+    toast({
+      title: 'The password that you have entered is wrong.',
+      status: 'error',
+      isClosable: true,
+      duration: 2000,
+    });
+  }
 
-      const responseBody = await response.json();
+  function onAuthenticated(token: string) {
+    localStorage.setItem('farm.jwt', token);
+    setJwt(token);
+    setIsAuth(true);
+  }
 
-      switch (response.status) {
-        /* The authenticate request succeeded. */
-        case 200:
-          auth.changeHost(host);
-          auth.changeJwt(responseBody.token);
-          auth.changeAuthenticated(true);
-          break;
-        /* The authenticate request failed. */
-        case 401:
-          toast({
-            title: 'The password that you have entered is wrong.',
-            status: 'error',
-            isClosable: true,
-            duration: 2000,
-          });
-          break;
-        default:
-          break;
-      }
-    } catch (exception) {
-      /* The request did not reach any Farm api. */
-      toast({
-        title: 'The host that you entered does not exist.',
-        status: 'error',
-        isClosable: true,
-        duration: 2000,
-      });
+  async function authenticate(pw: string) {
+    // Last execute and handle the response.
+    const resp = await agent.authenticate({ password: pw });
+
+    switch (resp.statusCode) {
+      case 401:
+        onNotAuthenticated();
+        break;
+      case 200:
+        onAuthenticated(resp.data.token);
+        break;
+      default:
+        break;
     }
   }
 

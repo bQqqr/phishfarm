@@ -7,17 +7,24 @@ export const useReadEmailConfig = () => {
 
   // Definitions
   const fetchConfig = useCallback(async () => {
-    const response = await fetch(`https://${app.host}/api/operator/read-email-config`, {
-      method: 'GET',
-      headers: { authorization: `Bearer ${app.jwt}` },
-    });
+    try {
+      const response = await fetch(`https://${app.host}/api/email-config`, {
+        method: 'GET',
+        headers: { authorization: `Bearer ${app.jwt}` },
+      });
 
-    const responseBody = await response.json();
-
-    if (response.status === 401) {
+      switch (response.status) {
+        case 401:
+          app.logout();
+          break;
+        case 200:
+          return await response.json();
+        default:
+          break;
+      }
+    } catch (exception) {
       app.logout();
-      return null;
-    } else return responseBody;
+    }
   }, [app]);
 
   // Returns

@@ -6,7 +6,10 @@ import { FormField } from './FormField';
 export const Form = ({
   children,
   ...props
-}: React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>) => {
+}: React.DetailedHTMLProps<
+  React.FormHTMLAttributes<HTMLFormElement>,
+  HTMLFormElement
+>) => {
   return (
     <form {...props}>
       <VStack align="start" spacing={5}>

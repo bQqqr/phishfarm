@@ -1,4 +1,5 @@
-﻿using FastEndpoints.Validation;
+﻿using System.Text;
+using FastEndpoints.Validation;
 
 namespace Farm.Common.Exceptions;
 
@@ -19,4 +20,16 @@ public class ValidationException : Exception
     }
 
     public IDictionary<string, string[]> Errors { get; }
+
+    public string PrintMessage()
+    {
+        var sb = new StringBuilder();
+
+        foreach (var error in Errors)
+        {
+            sb.Append(error.Value + "\n");
+        }
+
+        return sb.ToString();
+    }
 }

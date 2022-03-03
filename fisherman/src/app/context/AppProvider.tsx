@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface IAppProviderProps {
   children: React.ReactNode;
@@ -26,6 +27,7 @@ export const AppCtx = createContext<IAppContext>({
 
 export const AppProvider = ({ children }: IAppProviderProps) => {
   // Hooks
+  const nav = useNavigate();
   const [host, setHost] = useState('');
   const [jwt, setJwt] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
@@ -65,12 +67,21 @@ export const AppProvider = ({ children }: IAppProviderProps) => {
     changeHost('');
     changeJwt('');
     changeAuthenticated(false);
+    nav('/');
   }
 
   // Returns
   return (
     <AppCtx.Provider
-      value={{ host, jwt, authenticated, changeHost, changeJwt, changeAuthenticated, logout }}
+      value={{
+        host,
+        jwt,
+        authenticated,
+        changeHost,
+        changeJwt,
+        changeAuthenticated,
+        logout,
+      }}
     >
       {children}
     </AppCtx.Provider>
