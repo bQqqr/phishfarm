@@ -4,7 +4,7 @@ namespace Farm.Services.Email;
 
 public interface IEmailService
 {
-    EmailConfig Config { get; set; }
+    EmailSettings Settings { get; set; }
 
-    void SendEmail(string recipientEmail);
+    void SendEmail(string recipientEmail, string htmlMessage);
 }

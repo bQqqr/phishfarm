@@ -1,3 +1,5 @@
+using Farm.Common.Misc;
+
 namespace Farm.Models;
 
 public class Target
@@ -6,5 +8,5 @@ public class Target
     public string FirstName { get; set; } = String.Empty;
     public string LastName { get; set; } = String.Empty;
     public string EmailAddress { get; set; } = String.Empty;
-    public Maldoc Maldoc { get; set; } = new Maldoc();
+    public BlobFile Maldoc { get; set; } = new BlobFile();
 }

@@ -1,18 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
-    <PackageReference Include="FastEndpoints" Version="3.8.0" />
-    <PackageReference Include="FastEndpoints.Security" Version="3.8.0" />
-    <PackageReference Include="FastEndpoints.Swagger" Version="3.8.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.2" />
+    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1"/>
+    <PackageReference Include="FastEndpoints" Version="3.8.0"/>
+    <PackageReference Include="FastEndpoints.Security" Version="3.8.0"/>
+    <PackageReference Include="FastEndpoints.Swagger" Version="3.8.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.2"/>
+    <PackageReference Include="Hangfire" Version="1.7.28"/>
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0"/>
   </ItemGroup>
-
 </Project>

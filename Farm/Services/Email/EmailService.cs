@@ -7,23 +7,23 @@ namespace Farm.Services.Email;
 
 public class EmailService : IEmailService
 {
-    public EmailConfig Config { get; set; } = new EmailConfig();
+    public EmailSettings Settings { get; set; } = new EmailSettings();
 
-    public void SendEmail(string recipientEmail)
+    public void SendEmail(string recipientEmail, string htmlMessage)
     {
         try
         {
-            var sc = new SmtpClient(Config.SmtpHost, Config.SmtpPort);
-            sc.Credentials = new NetworkCredential(Config.SmtpUsername, Config.SmtpPassword);
+            var sc = new SmtpClient(Settings.SmtpHost, Settings.SmtpPort);
+            sc.Credentials = new NetworkCredential(Settings.SmtpUsername, Settings.SmtpPassword);
             sc.DeliveryMethod = SmtpDeliveryMethod.Network;
-            sc.EnableSsl = Config.EnabledSsl;
+            sc.EnableSsl = Settings.EnabledSsl;
 
             var m = new MailMessage();
-            m.Subject = Config.Subject;
-            m.From = new MailAddress(Config.FromEmail, Config.FromName);
+            m.Subject = Settings.Subject;
+            m.From = new MailAddress(Settings.FromEmail, Settings.FromName);
             m.To.Add(new MailAddress(recipientEmail));
             m.SubjectEncoding = Encoding.UTF8;
-            m.Body = Config.Template.Html;
+            m.Body = htmlMessage;
             m.BodyEncoding = Encoding.UTF8;
             m.IsBodyHtml = true;
 

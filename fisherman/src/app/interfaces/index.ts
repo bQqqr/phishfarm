@@ -1,2 +1,4 @@
-export * from './dtos';
-export * from './domains';
+export interface BlobFile {
+  filename: string;
+  content: string;
+}

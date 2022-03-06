@@ -1,0 +1,36 @@
+import { useToast } from '@chakra-ui/react';
+import { useSetRecoilState } from 'recoil';
+import { targetsAtom } from 'app/global';
+import { useAgent } from 'app/hooks';
+import { DeleteTargetRequest } from 'features/target';
+
+export const useDeleteTarget = () => {
+  // Hooks
+  const { agent } = useAgent();
+  const toast = useToast();
+  const setTargets = useSetRecoilState(targetsAtom);
+
+  // Definitions
+  const command = async (req: DeleteTargetRequest) => {
+    const resp = await agent.deleteTarget(req);
+
+    if (resp.status === 204) {
+      setTargets((oldTargets) => {
+        if (oldTargets)
+          return oldTargets.filter((t) => {
+            return t.id !== req.targetId;
+          });
+        else return [];
+      });
+      toast({
+        title: 'Target was removed successfully.',
+        status: 'success',
+        isClosable: true,
+        duration: 2000,
+      });
+    }
+  };
+
+  // Returns
+  return command;
+};

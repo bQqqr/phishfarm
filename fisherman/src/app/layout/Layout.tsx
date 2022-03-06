@@ -1,8 +1,8 @@
 import { useRecoilState } from 'recoil';
 import { isAuthAtom } from 'app/global';
-import { Login } from 'features/authentication';
-import { Routes } from './Routes';
+import { Login } from 'features/auth';
 import { DataProvider } from './DataProvider';
+import { Setup } from './Setup';
 
 export const Layout = () => {
   // Hooks
@@ -12,7 +12,7 @@ export const Layout = () => {
   if (isAuth)
     return (
       <DataProvider>
-        <Routes />
+        <Setup />
       </DataProvider>
     );
   else return <Login />;

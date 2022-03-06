@@ -1,19 +1,23 @@
 import { useToast } from '@chakra-ui/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import {
-  IAddTargetRequest,
-  IAddTargetResponse,
-  IAuthenticateRequest,
-  IAuthenticateResponse,
-  IChangeEmailConfigRequest,
-  IChangeTemplateConfigRequest,
-  IEmailConfig,
-  IRemoveTargetRequest,
-  ISendTestEmailRequest,
-  ITarget,
-  ITemplate,
-} from 'app/interfaces';
 import { apiAtom, isAuthAtom, jwtAtom } from 'app/global';
+import { GetTokenRequest, GetTokenResponse } from 'features/auth';
+import {
+  EmailSettings,
+  TestEmailRequest,
+  UpdateEmailSettingsRequest,
+} from 'features/email';
+import {
+  TemplateSettings,
+  UpdateTemplateSettingsRequest,
+} from 'features/template';
+import {
+  CreateTargetRequest,
+  CreateTargetResponse,
+  DeleteTargetRequest,
+  Target,
+} from 'features/target';
+import { CampaignSettings, LaunchCampaignRequest } from 'features/campaign';
 
 export const useAgent = () => {
   const toast = useToast();
@@ -29,6 +33,9 @@ export const useAgent = () => {
 
   const handleResponse = async <T>(response: Response) => {
     const statusCode = response.status;
+
+    console.log(statusCode);
+
     var result = {
       status: statusCode,
       data: null,
@@ -39,9 +46,6 @@ export const useAgent = () => {
         return result;
       case 200:
         result.data = (await response.json()) as T;
-        return result;
-      case 401:
-        agent.logout();
         return result;
       case 400:
         toast({
@@ -123,21 +127,26 @@ export const useAgent = () => {
       setIsAuth(false);
       window.location.reload();
     },
-    testEmail: (req: ISendTestEmailRequest) =>
-      requests.post<void>('/actions/test-email', req),
-    authenticate: (req: IAuthenticateRequest) =>
-      requests.post<IAuthenticateResponse>('/auth', req),
-    addTarget: (req: IAddTargetRequest) =>
-      requests.post<IAddTargetResponse>('/campaign/targets', req),
-    readTargets: () => requests.get<ITarget[]>('/campaign/targets'),
-    delTarget: (req: IRemoveTargetRequest) =>
-      requests.del(`/campaign/targets/${req.targetId}`),
-    changeEmailConf: (req: IChangeEmailConfigRequest) =>
-      requests.post('/email-config', req),
-    readEmailConf: () => requests.get<IEmailConfig>('/email-config'),
-    changeTemplate: (req: IChangeTemplateConfigRequest) =>
-      requests.post('/template', req),
-    readTemplate: () => requests.get<ITemplate>('/template'),
+    createTarget: (req: CreateTargetRequest) =>
+      requests.post<CreateTargetResponse>('/targets', req),
+    deleteTarget: (req: DeleteTargetRequest) =>
+      requests.del(`/targets/${req.targetId}`),
+    getCampaignSettings: () =>
+      requests.get<CampaignSettings>('/campaign-settings'),
+    getEmailSettings: () => requests.get<EmailSettings>('/email-settings'),
+    getTargets: () => requests.get<Target[]>('/targets'),
+    getTemplateSettings: () =>
+      requests.get<TemplateSettings>('/template-settings'),
+    getToken: (req: GetTokenRequest) =>
+      requests.post<GetTokenResponse>('/token', req),
+    launchCampaign: (req: LaunchCampaignRequest) =>
+      requests.post('/actions/launch-campaign', req),
+    testEmail: (req: TestEmailRequest) =>
+      requests.post('/actions/test-email', req),
+    updateEmailSettings: (req: UpdateEmailSettingsRequest) =>
+      requests.post('/email-settings', req),
+    updateTemplateSettings: (req: UpdateTemplateSettingsRequest) =>
+      requests.post('/template-settings', req),
   };
 
   return { agent };

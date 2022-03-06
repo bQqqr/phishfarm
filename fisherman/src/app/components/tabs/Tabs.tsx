@@ -4,11 +4,7 @@ import { TabsList } from './TabsList';
 import { TabsPanels } from './TabsPanels';
 
 export const Tabs = ({ children, ...props }: TabsProps) => {
-  return (
-    <ChakraTabs isLazy {...props}>
-      {children}
-    </ChakraTabs>
-  );
+  return <ChakraTabs {...props}>{children}</ChakraTabs>;
 };
 
 Tabs.List = TabsList;

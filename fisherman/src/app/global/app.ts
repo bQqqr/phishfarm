@@ -1,12 +1,25 @@
-import { IEmailConfig, ITarget } from 'app/interfaces';
 import { atom } from 'recoil';
+import { EmailSettings } from 'features/email';
+import { TemplateSettings } from 'features/template';
+import { Target } from 'features/target';
+import { CampaignSettings } from 'features/campaign';
 
-export const emailConfigAtom = atom<IEmailConfig | null>({
-  key: 'emailConfigAtom',
+export const emailSettingsAtom = atom<EmailSettings | null>({
+  key: 'emailSettingsAtom',
   default: null,
 });
 
-export const targetsAtom = atom<ITarget[] | null>({
-  key: 'targetsAtom',
+export const templateSettingsAtom = atom<TemplateSettings | null>({
+  key: 'templateSettingsAtom',
   default: null,
+});
+
+export const campaignSettingsAtom = atom<CampaignSettings | null>({
+  key: 'campaignSettingsAtom',
+  default: null,
+});
+
+export const targetsAtom = atom<Target[]>({
+  key: 'targetsAtom',
+  default: [],
 });

@@ -1,3 +1,5 @@
+@import 'react-datepicker/dist/react-datepicker.css';
+
 html,
 body,
 #root {
@@ -16,4 +18,11 @@ body,
 
 code {
   color: gray;
+}
+
+._datepicker {
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid var(--chakra-colors-gray-200);
 }

@@ -4,5 +4,6 @@ namespace Farm.Services.Campaign;
 
 public interface ICampaignService
 {
-    List<Target> Targets { get; set; }
+    CampaignSettings Settings { get; set; }
+    void LaunchCampaign();
 }

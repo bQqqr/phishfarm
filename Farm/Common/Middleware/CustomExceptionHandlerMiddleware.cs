@@ -1,6 +1,5 @@
 using System.Net;
 using Farm.Common.Exceptions;
-using FastEndpoints.Validation;
 using Newtonsoft.Json;
 
 namespace Farm.Common.Middleware;
@@ -34,6 +33,9 @@ public class CustomExceptionHandlerMiddleware
 
         switch (exception)
         {
+            case BadRequestException badRequestException:
+                code = HttpStatusCode.BadRequest;
+                break;
             case UnauthorizedAccessException unauthorizedAccessException:
                 code = HttpStatusCode.Unauthorized;
                 break;

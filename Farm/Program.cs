@@ -1,9 +1,14 @@
 using Farm.Common.Middleware;
 using Farm.Services.Campaign;
 using Farm.Services.Email;
+using Farm.Services.Targets;
+using Farm.Services.Telegram;
+using Farm.Services.Template;
 using FastEndpoints;
 using FastEndpoints.Security;
 using FastEndpoints.Swagger;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,8 +19,16 @@ builder.Host.UseSerilog((ctx, lc) => lc
 builder.Services.AddFastEndpoints();
 builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetSection("SymmetricKey").Get<string>());
 builder.Services.AddSwaggerDoc();
+builder.Services.AddHangfire(c =>
+{
+    c.UseMemoryStorage();
+});
+builder.Services.AddHangfireServer();
 builder.Services.AddEmailService();
+builder.Services.AddTemplateService();
+builder.Services.AddTargetsService();
 builder.Services.AddCampaignService();
+builder.Services.AddTelegramService();
 builder.Services.AddCors(c =>
 {
     c.AddPolicy(name: "myCorsPolicy", b =>
@@ -29,6 +42,7 @@ builder.Services.AddCors(c =>
 var app = builder.Build();
 app.UseCustomExceptionHandler();
 app.UseSerilogRequestLogging();
+app.UseHangfireDashboard();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("myCorsPolicy");
