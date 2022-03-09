@@ -1,4 +1,3 @@
-using Farm.Common.Exceptions;
 using FastEndpoints;
 using FastEndpoints.Security;
 using FastEndpoints.Validation;

@@ -31,6 +31,8 @@ public class CampaignService : ICampaignService
         {
             var message = _templateService.FinalMessage(target);
 
+
+
             BackgroundJob.Schedule(
                 methodCall: () => _emailService.SendEmail(target.EmailAddress, message),
                 delay: BetweenTodayAndDate(Settings.LaunchDate) +

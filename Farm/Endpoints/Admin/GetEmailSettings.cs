@@ -27,6 +27,7 @@ public class GetEmailSettingsEndpoint : EndpointWithoutRequest<EmailSettings>
     public override Task HandleAsync(CancellationToken ct)
     {
         Response.IsConfigured = _emailService.Settings.IsConfigured;
+        Response.IsTested = _emailService.Settings.IsConfigured;
         Response.EnabledSsl = _emailService.Settings.EnabledSsl;
         Response.SmtpHost = _emailService.Settings.SmtpHost;
         Response.SmtpPort = _emailService.Settings.SmtpPort;
