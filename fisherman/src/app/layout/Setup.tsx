@@ -45,6 +45,7 @@ export const Setup = () => {
     campaignSettings?.isLaunched;
   const statsDisable = !campaignSettings?.isLaunched;
 
+  console.log(emailSettings)
   // Returns
   return (
     <VStack spacing={5} p={5} w="100%">
@@ -70,7 +71,6 @@ export const Setup = () => {
             <Tabs.List.Tab isDisabled={emailDisable}>
               ⚙️ Email Settings {emailSettings?.isConfigured ? '✅' : '❓'}
             </Tabs.List.Tab>
-            <Tabs.List.Tab isDisabled>📷 Logo Canary ❓</Tabs.List.Tab>
             <Tabs.List.Tab isDisabled={templateDisable}>
               🖌️ Message Settings {templateSettings?.isConfigured ? '✅' : '❓'}
             </Tabs.List.Tab>

@@ -15,7 +15,6 @@ export const MessageTemplateEditor = () => {
   const onSubmit = async () => {
     ref?.current?.editor?.exportHtml(async (data: any) => {
       const { design, html } = data;
-      console.log(html);
       await update({
         html: html,
         design: JSON.stringify(design),

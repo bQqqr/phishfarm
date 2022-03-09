@@ -25,3 +25,14 @@ export interface EmailSettings {
 export interface TestEmailRequest {
   recipientEmail: string;
 }
+
+export interface UpdateEmailSettingsRequest {
+  enabledSsl: boolean;
+  smtpHost: string;
+  smtpPort: number;
+  smtpUsername: string;
+  smtpPassword: string;
+  fromEmail: string;
+  fromName: string;
+  subject: string;
+}
