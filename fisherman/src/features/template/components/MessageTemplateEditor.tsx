@@ -1,11 +1,15 @@
 import { useEffect, useRef } from 'react';
-import { Box, Button, Divider, Heading } from '@chakra-ui/react';
+import { Box, Button, Divider, Heading, Text } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
 import EmailEditor from 'react-email-editor';
 import { templateSettingsAtom } from 'app/global';
 import { useUpdateTemplateSettings } from 'features/template';
 
-export const MessageTemplateEditor = () => {
+interface Props {
+  isDisabled: boolean;
+}
+
+export const MessageTemplateEditor = ({ isDisabled }: Props) => {
   // Hooks
   const ref = useRef<any>(null);
   const update = useUpdateTemplateSettings();
@@ -38,9 +42,17 @@ export const MessageTemplateEditor = () => {
       <Heading size="md" mt={2}>
         Draw the Email Message Template
       </Heading>
+      <Text>
+        You can use the following placeholders: %email%, %first%, %last%,
+        %maldoc%
+      </Text>
       <Divider my={5} />
-      <EmailEditor ref={ref} />
+      <EmailEditor
+        style={{ pointerEvents: isDisabled ? 'none' : 'auto' }}
+        ref={ref}
+      />
       <Button
+        isDisabled={isDisabled}
         mt={5}
         size="sm"
         variant="outline"

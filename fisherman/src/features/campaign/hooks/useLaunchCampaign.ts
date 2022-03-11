@@ -1,19 +1,19 @@
 import { useToast } from '@chakra-ui/react';
 import { useSetRecoilState } from 'recoil';
-import { useAgent } from 'app/hooks';
+import { useAxios } from 'app/hooks';
 import { CampaignSettings, LaunchCampaignRequest } from 'features/campaign';
 import { campaignSettingsAtom, tabsIndexAtom } from 'app/global';
 
 export const useLaunchCampaign = () => {
   // Hooks
-  const { agent } = useAgent();
+  const { launchCampaign } = useAxios();
   const toast = useToast();
   const setSettings = useSetRecoilState(campaignSettingsAtom);
   const setTabIndex = useSetRecoilState(tabsIndexAtom);
 
   // Functions
   const command = async (req: LaunchCampaignRequest) => {
-    const resp = await agent.launchCampaign(req);
+    const resp = await launchCampaign(req);
     if (resp.status === 204) {
       const settings = {
         isLaunched: true,

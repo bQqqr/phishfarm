@@ -125,7 +125,6 @@ export const useAgent = () => {
       setApi('');
       setJwt('');
       setIsAuth(false);
-      window.location.reload();
     },
     createTarget: (req: CreateTargetRequest) =>
       requests.post<CreateTargetResponse>('/targets', req),

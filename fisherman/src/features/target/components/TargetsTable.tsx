@@ -11,16 +11,20 @@ import { Drawer, Form, Table } from 'app/components';
 import { targetsAtom } from 'app/global';
 import { useCreateTarget, useDeleteTarget } from 'features/target';
 
-export interface IData {
+interface Props {
+  isDisabled: boolean;
+}
+
+export interface FormFields {
   firstName: string;
   lastName: string;
   emailAddress: string;
   maldoc: File[];
 }
 
-export const TargetsTable = () => {
+export const TargetsTable = ({ isDisabled }: Props) => {
   // Hooks
-  const form = useForm<IData>();
+  const form = useForm<FormFields>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const targets = useRecoilValue(targetsAtom);
   const createCommand = useCreateTarget();
@@ -35,7 +39,7 @@ export const TargetsTable = () => {
     }) as Promise<string>;
   };
 
-  const onSubmit: SubmitHandler<IData> = async (inputs) => {
+  const onSubmit: SubmitHandler<FormFields> = async (inputs) => {
     const content = await toBase64(inputs.maldoc[0]);
 
     await createCommand({
@@ -59,24 +63,30 @@ export const TargetsTable = () => {
         Add Some Fish Targets
       </Heading>
       <Divider my={5} />
-      <Button variant="outline" size="sm" onClick={onOpen} colorScheme="green">
+      <Button
+        isDisabled={isDisabled}
+        variant="outline"
+        size="sm"
+        onClick={onOpen}
+        colorScheme="green"
+      >
         🐟 Create a Target
       </Button>
       <Drawer isOpen={isOpen} onClose={onClose}>
         <Drawer.Header>Create a Target</Drawer.Header>
         <Drawer.Body>
           <Form onSubmit={form.handleSubmit(onSubmit)}>
-            <Form.Field>
+            <Form.Field isDisabled={isDisabled}>
               <Form.Field.Label>First Name</Form.Field.Label>
               <Form.Field.Input {...form.register('firstName')} type="text" />
               <Form.Field.Desc>Enter the target's first name.</Form.Field.Desc>
             </Form.Field>
-            <Form.Field>
+            <Form.Field isDisabled={isDisabled}>
               <Form.Field.Label>Last Name</Form.Field.Label>
               <Form.Field.Input {...form.register('lastName')} type="text" />
               <Form.Field.Desc>Enter the target's last name.</Form.Field.Desc>
             </Form.Field>
-            <Form.Field>
+            <Form.Field isDisabled={isDisabled}>
               <Form.Field.Label>Email</Form.Field.Label>
               <Form.Field.Input
                 {...form.register('emailAddress')}
@@ -86,14 +96,19 @@ export const TargetsTable = () => {
                 Enter the target's email address.
               </Form.Field.Desc>
             </Form.Field>
-            <Form.Field>
+            <Form.Field isDisabled={isDisabled}>
               <Form.Field.Label>Maldoc</Form.Field.Label>
               <Form.Field.Input {...form.register('maldoc')} type="file" />
               <Form.Field.Desc>
                 Enter the target's served maldoc.
               </Form.Field.Desc>
             </Form.Field>
-            <Form.Button size="sm" variant="outline" colorScheme="green">
+            <Form.Button
+              isDisabled={isDisabled}
+              size="sm"
+              variant="outline"
+              colorScheme="green"
+            >
               ✅ Create
             </Form.Button>
           </Form>
@@ -119,6 +134,7 @@ export const TargetsTable = () => {
                 <Table.Cell>{v.emailAddress}</Table.Cell>
                 <Table.Cell>
                   <Button
+                    isDisabled={isDisabled}
                     size="sm"
                     onClick={() => onDelete(v.id)}
                     colorScheme="red"

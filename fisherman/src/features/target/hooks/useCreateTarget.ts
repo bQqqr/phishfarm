@@ -1,18 +1,18 @@
 import { useToast } from '@chakra-ui/react';
 import { useSetRecoilState } from 'recoil';
 import { targetsAtom } from 'app/global';
-import { useAgent } from 'app/hooks';
+import { useAxios } from 'app/hooks';
 import { CreateTargetRequest, Target } from 'features/target';
 
 export const useCreateTarget = () => {
   // Hooks
-  const { agent } = useAgent();
+  const { createTarget } = useAxios();
   const toast = useToast();
   const setTargets = useSetRecoilState(targetsAtom);
 
   // Functions
   const command = async (req: CreateTargetRequest) => {
-    const resp = await agent.createTarget(req);
+    const resp = await createTarget(req);
 
     if (resp.status === 200) {
       setTargets((oldTargets) => {

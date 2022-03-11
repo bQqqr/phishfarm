@@ -8,12 +8,11 @@ import {
   targetsAtom,
   templateSettingsAtom,
 } from 'app/global';
-import { useAgent } from 'app/hooks';
+import { useAxios } from 'app/hooks';
 import { LaunchCampaignForm } from 'features/campaign';
 import { EmailSettingsForm, TestEmailForm } from 'features/email';
 import { TargetsTable } from 'features/target';
 import { MessageTemplateEditor } from 'features/template';
-import { useEffect } from 'react';
 
 export const Setup = () => {
   // Hooks
@@ -22,30 +21,28 @@ export const Setup = () => {
   const templateSettings = useRecoilValue(templateSettingsAtom);
   const targets = useRecoilValue(targetsAtom);
   const campaignSettings = useRecoilValue(campaignSettingsAtom);
-  const { agent } = useAgent();
+  const { logout } = useAxios();
 
-  // Boostrap
-  useEffect(() => {
-    if (campaignSettings?.isLaunched) setIndex(6);
-  }, [campaignSettings?.isLaunched, setIndex]);
+  // Checklist
+  const emailStepCompleted = emailSettings?.isConfigured;
+  const templateStepCompleted = templateSettings?.isConfigured;
+  const testStepCompleted = emailSettings?.isTested;
+  const targetsStepCompleted = targets.length > 0;
+  const launchStepCompleted = campaignSettings?.isLaunched;
 
-  // Disables
-  const emailDisable = campaignSettings?.isLaunched;
-  const templateDisable = campaignSettings?.isLaunched;
-  const testDisable =
-    !emailSettings?.isConfigured ||
-    !templateSettings?.isConfigured ||
-    campaignSettings?.isLaunched;
-  const targetsDisable =
-    !emailSettings?.isTested || campaignSettings?.isLaunched;
-  const campaignDisable =
-    !emailSettings?.isConfigured ||
-    !templateSettings?.isConfigured ||
-    targets.length === 0 ||
-    campaignSettings?.isLaunched;
-  const statsDisable = !campaignSettings?.isLaunched;
+  // Tabs
+  const testTabDisabled = !emailStepCompleted || !templateStepCompleted;
+  const targetsTabDisabled = !testStepCompleted;
+  const launchTabDisabled = !testStepCompleted || !targetsStepCompleted;
+  const statsTabDisabled = !campaignSettings?.isLaunched;
 
-  console.log(emailSettings)
+  // Inputs
+  const emailFormDisabled = campaignSettings?.isLaunched;
+  const templateFormDisabled = campaignSettings?.isLaunched;
+  const testFormDisabled = campaignSettings?.isLaunched;
+  const targetsTableDisabled = campaignSettings?.isLaunched;
+  const launchFormDisabled = campaignSettings?.isLaunched;
+
   // Returns
   return (
     <VStack spacing={5} p={5} w="100%">
@@ -55,53 +52,55 @@ export const Setup = () => {
           colorScheme="orange"
           variant="outline"
           size="sm"
-          onClick={agent.logout}
+          onClick={logout}
         >
-          🧹 Clear Authentication Token
+          🧹 Log out
         </Button>
       </HStack>
-      <Box w="1500px">
+      <Box>
         <Tabs
+          defaultIndex={campaignSettings?.isLaunched ? 6 : 0}
+          w="1200px"
           index={index}
           onChange={(index: number) => setIndex(index)}
           mt={5}
           size="sm"
         >
           <Tabs.List whiteSpace="nowrap">
-            <Tabs.List.Tab isDisabled={emailDisable}>
-              ⚙️ Email Settings {emailSettings?.isConfigured ? '✅' : '❓'}
+            <Tabs.List.Tab>
+              ⚙️ Email Settings {emailStepCompleted ? '✅' : '❌'}
             </Tabs.List.Tab>
-            <Tabs.List.Tab isDisabled={templateDisable}>
-              🖌️ Message Settings {templateSettings?.isConfigured ? '✅' : '❓'}
+            <Tabs.List.Tab>
+              🖌️ Template Settings {templateStepCompleted ? '✅' : '❌'}
             </Tabs.List.Tab>
-            <Tabs.List.Tab isDisabled={testDisable}>
-              🧪 Testing {emailSettings?.isTested ? '✅' : '❓'}
+            <Tabs.List.Tab isDisabled={testTabDisabled}>
+              🧪 Testing {testStepCompleted ? '✅' : '❌'}
             </Tabs.List.Tab>
-            <Tabs.List.Tab isDisabled={targetsDisable}>
-              🍥Targets Specification {targets.length > 0 ? '✅' : '❓'}
+            <Tabs.List.Tab isDisabled={targetsTabDisabled}>
+              🍥Targets Specification {targetsStepCompleted ? '✅' : '❌'}
             </Tabs.List.Tab>
-            <Tabs.List.Tab isDisabled={campaignDisable}>
-              🏁 Launch Campaign {campaignSettings?.isLaunched ? '✅' : '❓'}
+            <Tabs.List.Tab isDisabled={launchTabDisabled}>
+              🏁 Launch Campaign {launchStepCompleted ? '✅' : '❌'}
             </Tabs.List.Tab>
-            <Tabs.List.Tab isDisabled={statsDisable}>
-              📊 Campaign Statistics
+            <Tabs.List.Tab isDisabled={statsTabDisabled}>
+              📊 Campaign Statistics {launchStepCompleted ? '🚀' : '🔭'}
             </Tabs.List.Tab>
           </Tabs.List>
           <Tabs.Panels>
             <Tabs.Panels.Panel>
-              <EmailSettingsForm />
+              <EmailSettingsForm isDisabled={emailFormDisabled!} />
             </Tabs.Panels.Panel>
             <Tabs.Panels.Panel>
-              <MessageTemplateEditor />
+              <MessageTemplateEditor isDisabled={templateFormDisabled!} />
             </Tabs.Panels.Panel>
             <Tabs.Panels.Panel>
-              <TestEmailForm />
+              <TestEmailForm isDisabled={testFormDisabled!} />
             </Tabs.Panels.Panel>
             <Tabs.Panels.Panel>
-              <TargetsTable />
+              <TargetsTable isDisabled={targetsTableDisabled!} />
             </Tabs.Panels.Panel>
             <Tabs.Panels.Panel>
-              <LaunchCampaignForm />
+              <LaunchCampaignForm isDisabled={launchFormDisabled!} />
             </Tabs.Panels.Panel>
           </Tabs.Panels>
         </Tabs>

@@ -1,19 +1,19 @@
 import { useToast } from '@chakra-ui/react';
 import { emailSettingsAtom } from 'app/global';
-import { useAgent } from 'app/hooks';
+import { useAxios } from 'app/hooks';
 import { TestEmailRequest } from 'features/email';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { EmailSettings } from '../interfaces';
 
 export const useTestEmail = () => {
   // Hooks
-  const { agent } = useAgent();
+  const { testEmail } = useAxios();
   const toast = useToast();
   const [emailSettings, setEmailSettings] = useRecoilState(emailSettingsAtom);
 
   // Functions
   const command = async (req: TestEmailRequest) => {
-    const resp = await agent.testEmail(req);
+    const resp = await testEmail(req);
 
     if (resp.status === 204) {
       const settings = {

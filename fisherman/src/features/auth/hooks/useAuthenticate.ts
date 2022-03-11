@@ -1,24 +1,22 @@
 import { useSetRecoilState } from 'recoil';
 import { isAuthAtom, jwtAtom } from 'app/global';
-import { useAgent } from 'app/hooks';
+import { useAxios } from 'app/hooks';
 
 export const useAuthenticate = () => {
   // Hooks
-  const { agent } = useAgent();
-  const setJwt = useSetRecoilState(jwtAtom);
+  const { getToken } = useAxios();
   const setIsAuth = useSetRecoilState(isAuthAtom);
+  const setJwt = useSetRecoilState(jwtAtom);
 
   // Functions
-  const onAuthenticated = (token: string) => {
-    localStorage.setItem('farm.jwt', token);
-    setJwt(token);
-    setIsAuth(true);
-  };
-
   async function authenticate(pw: string) {
-    const resp = await agent.getToken({ password: pw });
+    const resp = await getToken({ password: pw });
 
-    if (resp?.data?.token) onAuthenticated(resp.data.token);
+    if (resp.data.token) {
+      localStorage.setItem('farm.jwt', resp.data.token);
+      setJwt(resp.data.token);
+      setIsAuth(true);
+    }
   }
 
   // Returns

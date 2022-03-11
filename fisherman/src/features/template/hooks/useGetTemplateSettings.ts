@@ -1,14 +1,15 @@
 import { useCallback } from 'react';
-import { useAgent } from 'app/hooks';
+import { useAxios } from 'app/hooks';
 
 export const useGetTemplateSettings = () => {
   // Hooks
-  const { agent } = useAgent();
+  const { getTemplateSettings } = useAxios();
 
   // Functions
   const query = useCallback(async () => {
-    return await agent.getTemplateSettings();
-  }, [agent]);
+    const resp = await getTemplateSettings();
+    if (resp.data) return resp.data;
+  }, [getTemplateSettings]);
 
   // Returns
   return query;

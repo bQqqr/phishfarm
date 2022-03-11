@@ -8,7 +8,11 @@ import {
 } from 'features/email';
 import { emailSettingsAtom } from 'app/global';
 
-export const EmailSettingsForm = () => {
+interface Props {
+  isDisabled: boolean;
+}
+
+export const EmailSettingsForm = ({ isDisabled }: Props) => {
   // Hooks
   const emailSettings = useRecoilValue(emailSettingsAtom);
   const form = useForm<UpdateEmailSettingsRequest>();
@@ -28,7 +32,7 @@ export const EmailSettingsForm = () => {
         <Divider my={5} />
         <Form onSubmit={form.handleSubmit(onSubmit)}>
           <HStack w="100%">
-            <Form.Field>
+            <Form.Field isDisabled={isDisabled}>
               <Form.Field.Label>SMTP Host</Form.Field.Label>
               <Form.Field.Input
                 defaultValue={emailSettings.smtpHost}
@@ -36,7 +40,7 @@ export const EmailSettingsForm = () => {
               />
               <Form.Field.Desc>Enter the SMTP's dns or ipv4.</Form.Field.Desc>
             </Form.Field>
-            <Form.Field>
+            <Form.Field isDisabled={isDisabled}>
               <Form.Field.Label>SMTP Port</Form.Field.Label>
               <Form.Field.Number defaultValue={emailSettings.smtpPort}>
                 <Form.Field.Number.Input {...form.register('smtpPort')} />
@@ -45,7 +49,7 @@ export const EmailSettingsForm = () => {
             </Form.Field>
           </HStack>
           <HStack w="100%">
-            <Form.Field>
+            <Form.Field isDisabled={isDisabled}>
               <Form.Field.Label>SMTP Username</Form.Field.Label>
               <Form.Field.Input
                 defaultValue={emailSettings.smtpUsername}
@@ -55,7 +59,7 @@ export const EmailSettingsForm = () => {
                 Enter the SMTP username credential.
               </Form.Field.Desc>
             </Form.Field>
-            <Form.Field>
+            <Form.Field isDisabled={isDisabled}>
               <Form.Field.Label>SMTP Password</Form.Field.Label>
               <Form.Field.Input
                 defaultValue={emailSettings.smtpPassword}
@@ -67,7 +71,7 @@ export const EmailSettingsForm = () => {
             </Form.Field>
           </HStack>
           <HStack w="100%">
-            <Form.Field>
+            <Form.Field isDisabled={isDisabled}>
               <Form.Field.Label>From Email</Form.Field.Label>
               <Form.Field.Input
                 defaultValue={emailSettings.fromEmail}
@@ -75,7 +79,7 @@ export const EmailSettingsForm = () => {
               />
               <Form.Field.Desc>Enter the From's email address.</Form.Field.Desc>
             </Form.Field>
-            <Form.Field>
+            <Form.Field isDisabled={isDisabled}>
               <Form.Field.Label>From Name</Form.Field.Label>
               <Form.Field.Input
                 defaultValue={emailSettings.fromName}
@@ -85,7 +89,7 @@ export const EmailSettingsForm = () => {
             </Form.Field>
           </HStack>
           <HStack w="100%">
-            <Form.Field>
+            <Form.Field isDisabled={isDisabled}>
               <Form.Field.Label>Subject</Form.Field.Label>
               <Form.Field.Input
                 defaultValue={emailSettings.subject}
@@ -95,7 +99,7 @@ export const EmailSettingsForm = () => {
                 Enter the subject of the email message.
               </Form.Field.Desc>
             </Form.Field>
-            <Form.Field textAlign="left">
+            <Form.Field isDisabled={isDisabled} textAlign="left">
               <Form.Field.Checkbox
                 defaultValue={emailSettings.enabledSsl.toString()}
                 {...form.register('enabledSsl')}
@@ -105,7 +109,12 @@ export const EmailSettingsForm = () => {
             </Form.Field>
           </HStack>
           <HStack>
-            <Form.Button size="sm" variant="outline" colorScheme="green">
+            <Form.Button
+              isDisabled={isDisabled}
+              size="sm"
+              variant="outline"
+              colorScheme="green"
+            >
               ✅ Save Email Settings
             </Form.Button>
           </HStack>

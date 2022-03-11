@@ -3,7 +3,11 @@ import { Form } from 'app/components';
 import { TestEmailRequest, useTestEmail } from 'features/email';
 import { Divider, Heading } from '@chakra-ui/react';
 
-export const TestEmailForm = () => {
+interface Props {
+  isDisabled: boolean;
+}
+
+export const TestEmailForm = ({ isDisabled }: Props) => {
   // Hooks
   const form = useForm<TestEmailRequest>();
   const command = useTestEmail();
@@ -20,14 +24,19 @@ export const TestEmailForm = () => {
       </Heading>
       <Divider my={5} />
       <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <Form.Field>
+        <Form.Field isDisabled={isDisabled}>
           <Form.Field.Label>Recipient's Email Address</Form.Field.Label>
           <Form.Field.Input {...form.register('recipientEmail')} />
           <Form.Field.Desc>
             Enter the email address, that is going to receive the message.
           </Form.Field.Desc>
         </Form.Field>
-        <Form.Button variant="outline" size="sm" colorScheme="yellow">
+        <Form.Button
+          isDisabled={isDisabled}
+          variant="outline"
+          size="sm"
+          colorScheme="yellow"
+        >
           🧪 Send Test Message
         </Form.Button>
       </Form>

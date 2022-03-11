@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { isAuthAtom } from 'app/global';
 import { Login } from 'features/auth';
 import { DataProvider } from './DataProvider';
@@ -6,7 +6,7 @@ import { Setup } from './Setup';
 
 export const Layout = () => {
   // Hooks
-  const [isAuth] = useRecoilState(isAuthAtom);
+  const isAuth = useRecoilValue(isAuthAtom);
 
   // Returns
   if (isAuth)

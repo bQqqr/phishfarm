@@ -1,6 +1,7 @@
-import { useCallback, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { apiAtom, isAuthAtom, jwtAtom } from 'app/global';
+import { Spinner } from '@chakra-ui/react';
 
 interface Props {
   children: React.ReactNode;
@@ -8,28 +9,25 @@ interface Props {
 
 export const AuthProvider = ({ children }: Props) => {
   // Hooks
-  const [, setApi] = useRecoilState(apiAtom);
-  const [, setJwt] = useRecoilState(jwtAtom);
-  const [, setIsAuth] = useRecoilState(isAuthAtom);
-
-  // Functions
-  const handleAuthenticated = useCallback(
-    (api: string, jwt: string) => {
-      setApi(api);
-      setJwt(jwt);
-      setIsAuth(true);
-    },
-    [setApi, setJwt, setIsAuth],
-  );
+  const [done, setDone] = useState(false);
+  const setApi = useSetRecoilState(apiAtom);
+  const setJwt = useSetRecoilState(jwtAtom);
+  const setIsAuth = useSetRecoilState(isAuthAtom);
 
   // Boostrap
   useEffect(() => {
-    const localstorageHost = localStorage.getItem('farm.api');
-    const localstorageJwt = localStorage.getItem('farm.jwt');
+    const lsApi = localStorage.getItem('farm.api');
+    const lsJwt = localStorage.getItem('farm.jwt');
 
-    if (localstorageHost && localstorageJwt)
-      handleAuthenticated(localstorageHost, localstorageJwt);
-  }, [handleAuthenticated]);
+    if (lsApi && lsJwt) {
+      setApi(lsApi);
+      setJwt(lsJwt);
+      setIsAuth(true);
+    }
 
-  return <>{children}</>;
+    setDone(true);
+  }, [setApi, setJwt, setIsAuth]);
+
+  if (done) return <>{children}</>;
+  else return <Spinner />;
 };

@@ -1,14 +1,15 @@
-import { useAgent } from 'app/hooks';
+import { useAxios } from 'app/hooks';
 import { useCallback } from 'react';
 
 export const useGetTargets = () => {
   // Hooks
-  const { agent } = useAgent();
+  const { getTargets } = useAxios();
 
   // Functions
   const query = useCallback(async () => {
-    return await agent.getTargets();
-  }, [agent]);
+    const resp = await getTargets();
+    if (resp.data) return resp.data;
+  }, [getTargets]);
 
   // Returns
   return query;

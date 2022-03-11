@@ -1,14 +1,16 @@
 import { useCallback } from 'react';
-import { useAgent } from 'app/hooks';
+import { useAxios } from 'app/hooks';
 
 export const useGetEmailSettings = () => {
   // Hooks
-  const { agent } = useAgent();
+  const { getEmailSettings } = useAxios();
 
   // Functions
   const query = useCallback(async () => {
-    return await agent.getEmailSettings();
-  }, [agent]);
+    const resp = await getEmailSettings();
+    console.log(resp);
+    if (resp) return resp.data;
+  }, [getEmailSettings]);
 
   // Returns
   return query;

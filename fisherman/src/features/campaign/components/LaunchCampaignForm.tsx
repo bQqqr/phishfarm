@@ -6,7 +6,11 @@ import { Form } from 'app/components';
 import { campaignSettingsAtom } from 'app/global';
 import { LaunchCampaignRequest, useLaunchCampaign } from 'features/campaign';
 
-export const LaunchCampaignForm = () => {
+interface Props {
+  isDisabled: boolean;
+}
+
+export const LaunchCampaignForm = ({ isDisabled }: Props) => {
   // Hooks
   const campaign = useRecoilValue(campaignSettingsAtom);
   const form = useForm<LaunchCampaignRequest>();
@@ -16,6 +20,7 @@ export const LaunchCampaignForm = () => {
   const onSubmit: SubmitHandler<LaunchCampaignRequest> = async (inputs) => {
     await command(inputs);
   };
+
   const filterPassedTime = (time: Date) => {
     const currentDate = new Date();
     const selectedDate = new Date(time);
@@ -28,11 +33,11 @@ export const LaunchCampaignForm = () => {
     return (
       <Box>
         <Heading size="md" mt={2}>
-          Finizalize and Launch
+          Finish and Launch
         </Heading>
         <Divider my={5} />
         <Form onSubmit={form.handleSubmit(onSubmit)}>
-          <Form.Field w="100%">
+          <Form.Field isDisabled={isDisabled} w="100%">
             <Form.Field.Label>Launch Date</Form.Field.Label>
           </Form.Field>
           <Controller
@@ -41,7 +46,7 @@ export const LaunchCampaignForm = () => {
             control={form.control}
             render={({ field: { onChange, value } }: any) => (
               <DatePicker
-                className="_datepicker"
+                readOnly={isDisabled}
                 selected={new Date(value)}
                 onChange={onChange}
                 minDate={new Date()}
@@ -52,13 +57,18 @@ export const LaunchCampaignForm = () => {
               />
             )}
           />
-          <Form.Field>
+          <Form.Field isDisabled={isDisabled}>
             <Form.Field.Label>Time Interval In Minutes</Form.Field.Label>
             <Form.Field.Number defaultValue={campaign?.timeInterval}>
               <Form.Field.Number.Input {...form.register('timeInterval')} />
             </Form.Field.Number>
           </Form.Field>
-          <Form.Button size="sm" variant="outline" colorScheme="blue">
+          <Form.Button
+            isDisabled={isDisabled}
+            size="sm"
+            variant="outline"
+            colorScheme="blue"
+          >
             🚀 Launch Campaign
           </Form.Button>
         </Form>

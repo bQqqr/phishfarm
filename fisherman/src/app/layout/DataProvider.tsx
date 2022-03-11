@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import {
   campaignSettingsAtom,
@@ -10,6 +10,7 @@ import { useGetEmailSettings } from 'features/email';
 import { useGetTemplateSettings } from 'features/template';
 import { useGetTargets } from 'features/target';
 import { useGetCampaignSettings } from 'features/campaign';
+import { Spinner } from '@chakra-ui/react';
 
 interface Props {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ interface Props {
 
 export const DataProvider = ({ children }: Props) => {
   // Hooks
+  const [done, setDone] = useState(false);
   const emailQuery = useGetEmailSettings();
   const templateQuery = useGetTemplateSettings();
   const targetsQuery = useGetTargets();
@@ -33,10 +35,12 @@ export const DataProvider = ({ children }: Props) => {
     const targetsDto = await targetsQuery();
     const campaignDto = await campaignQuery();
 
-    setTemplateSettings(templateDto.data);
-    setEmailSettings(emailDto.data);
-    setTargets(targetsDto.data ?? []);
-    setCampaignSettings(campaignDto.data);
+    if (templateDto) setTemplateSettings(templateDto);
+    if (emailDto) setEmailSettings(emailDto);
+    if (targetsDto) setTargets(targetsDto ?? []);
+    if (campaignDto) setCampaignSettings(campaignDto);
+
+    setDone(true);
   }, [
     emailQuery,
     templateQuery,
@@ -53,5 +57,6 @@ export const DataProvider = ({ children }: Props) => {
     handleSetup();
   }, [handleSetup]);
 
-  return <>{children}</>;
+  if (done) return <>{children}</>;
+  else return <Spinner />;
 };

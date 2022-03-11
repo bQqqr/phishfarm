@@ -1,14 +1,16 @@
 import { useCallback } from 'react';
-import { useAgent } from 'app/hooks';
+import { useAxios } from 'app/hooks';
 
 export const useGetCampaignSettings = () => {
   // Hooks
-  const { agent } = useAgent();
+  const { getCampaignSettings } = useAxios();
 
   // Functions
   const query = useCallback(async () => {
-    return await agent.getCampaignSettings();
-  }, [agent]);
+    const resp = await getCampaignSettings();
+
+    if (resp) return resp.data;
+  }, [getCampaignSettings]);
 
   // Returns
   return query;
