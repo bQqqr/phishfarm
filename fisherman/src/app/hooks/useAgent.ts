@@ -34,8 +34,6 @@ export const useAgent = () => {
   const handleResponse = async <T>(response: Response) => {
     const statusCode = response.status;
 
-    console.log(statusCode);
-
     var result = {
       status: statusCode,
       data: null,

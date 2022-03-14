@@ -68,22 +68,22 @@ export const Setup = () => {
         >
           <Tabs.List whiteSpace="nowrap">
             <Tabs.List.Tab>
-              ⚙️ Email Settings {emailStepCompleted ? '✅' : '❌'}
+              ⚙️ Email {emailStepCompleted ? '✅' : '❌'}
             </Tabs.List.Tab>
             <Tabs.List.Tab>
-              🖌️ Template Settings {templateStepCompleted ? '✅' : '❌'}
+              🖌️ Template {templateStepCompleted ? '✅' : '❌'}
             </Tabs.List.Tab>
             <Tabs.List.Tab isDisabled={testTabDisabled}>
               🧪 Testing {testStepCompleted ? '✅' : '❌'}
             </Tabs.List.Tab>
             <Tabs.List.Tab isDisabled={targetsTabDisabled}>
-              🍥Targets Specification {targetsStepCompleted ? '✅' : '❌'}
+              🍥 Targets {targetsStepCompleted ? '✅' : '❌'}
             </Tabs.List.Tab>
             <Tabs.List.Tab isDisabled={launchTabDisabled}>
-              🏁 Launch Campaign {launchStepCompleted ? '✅' : '❌'}
+              🏁 Launch {launchStepCompleted ? '✅' : '❌'}
             </Tabs.List.Tab>
             <Tabs.List.Tab isDisabled={statsTabDisabled}>
-              📊 Campaign Statistics {launchStepCompleted ? '🚀' : '🔭'}
+              📊 Statistics {launchStepCompleted ? '🚀' : '🔭'}
             </Tabs.List.Tab>
           </Tabs.List>
           <Tabs.Panels>

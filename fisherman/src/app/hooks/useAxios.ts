@@ -34,7 +34,6 @@ export const useAxios = () => {
     (err: AxiosError) => {
       // If user has not logged in.
       if (jwt === '') {
-        console.log(1);
         if (err?.message === 'Network Error')
           toast({
             status: 'error',

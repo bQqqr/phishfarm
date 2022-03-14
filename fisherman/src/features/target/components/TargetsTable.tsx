@@ -10,6 +10,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Drawer, Form, Table } from 'app/components';
 import { targetsAtom } from 'app/global';
 import { useCreateTarget, useDeleteTarget } from 'features/target';
+import { string } from 'yup';
 
 interface Props {
   isDisabled: boolean;
@@ -31,16 +32,28 @@ export const TargetsTable = ({ isDisabled }: Props) => {
   const deleteCommand = useDeleteTarget();
 
   // Definitions
-  const toBase64 = async (blob: File) => {
-    return new Promise((resolve, _) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.readAsDataURL(blob);
-    }) as Promise<string>;
+  const convertBase64 = (file: Blob): any => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
   };
 
   const onSubmit: SubmitHandler<FormFields> = async (inputs) => {
-    const content = await toBase64(inputs.maldoc[0]);
+    var content = (await convertBase64(inputs.maldoc[0])) as string;
+
+    // Only payload.
+    content = content.substring(content.lastIndexOf(',') + 1);
+
+    console.log(content);
 
     await createCommand({
       firstName: inputs.firstName,

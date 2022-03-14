@@ -8,7 +8,6 @@ export const useGetEmailSettings = () => {
   // Functions
   const query = useCallback(async () => {
     const resp = await getEmailSettings();
-    console.log(resp);
     if (resp) return resp.data;
   }, [getEmailSettings]);
 

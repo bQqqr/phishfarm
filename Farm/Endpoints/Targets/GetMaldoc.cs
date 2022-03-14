@@ -1,4 +1,3 @@
-using System.Text;
 using Farm.Common.Guards;
 using Farm.Models;
 using Farm.Services.Targets;
@@ -6,32 +5,33 @@ using FastEndpoints;
 
 namespace Farm.Endpoints.Targets;
 
-public class GetImageCanaryRequest
+public class GetMaldocRequest
 {
     public string TargetId { get; set; } = String.Empty;
 }
 
-public class GetImageCanaryEndpoint : Endpoint<GetImageCanaryRequest>
+public class GetMaldocEndpoint : Endpoint<GetMaldocRequest>
 {
     private readonly ITargetsService _targetsService;
 
-    public GetImageCanaryEndpoint(ITargetsService targetsService)
+    public GetMaldocEndpoint(ITargetsService targetsService)
     {
         _targetsService = targetsService;
     }
 
     public override void Configure()
     {
+
         Verbs(Http.GET);
-        Routes("/api/image/{TargetId}");
+        Routes("/api/files/{TargetId}");
         AllowAnonymous();
         Describe(e => e
-            .Accepts<GetImageCanaryRequest>("application/json")
+            .Accepts<GetMaldocRequest>("application/json")
             .Produces(200)
             .ProducesProblem(401));
     }
 
-    public override async Task HandleAsync(GetImageCanaryRequest req, CancellationToken ct)
+    public override async Task HandleAsync(GetMaldocRequest req, CancellationToken ct)
     {
         var t = _targetsService.Targets.Find(t => t.Id == req.TargetId);
 
@@ -40,6 +40,6 @@ public class GetImageCanaryEndpoint : Endpoint<GetImageCanaryRequest>
         t!.DateRead = DateTime.Now;
         t!.HasRead = true;
 
-        await SendBytesAsync(Encoding.ASCII.GetBytes(t.Maldoc.Content), t.Maldoc.Filename);
+        await SendBytesAsync(Convert.FromBase64String(t.Maldoc.Content), t.Maldoc.Filename);
     }
 }
