@@ -25,6 +25,12 @@ export const useCreateTarget = () => {
             content: req.maldocContent,
             filename: req.maldocFilename,
           },
+          isSent: false,
+          dateSent: '',
+          dateRead: '',
+          hasRead: false,
+          dateDownloaded: '',
+          hasDownloaded: false,
         };
 
         return oldTargets ? [...oldTargets, target] : [target];

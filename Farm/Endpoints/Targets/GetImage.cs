@@ -5,16 +5,16 @@ using FastEndpoints;
 
 namespace Farm.Endpoints.Targets;
 
-public class GetMaldocRequest
+public class GetImageRequest
 {
     public string TargetId { get; set; } = String.Empty;
 }
 
-public class GetMaldocEndpoint : Endpoint<GetMaldocRequest>
+public class GetImageEndpoint : Endpoint<GetImageRequest>
 {
     private readonly ITargetsService _targetsService;
 
-    public GetMaldocEndpoint(ITargetsService targetsService)
+    public GetImageEndpoint(ITargetsService targetsService)
     {
         _targetsService = targetsService;
     }
@@ -23,23 +23,23 @@ public class GetMaldocEndpoint : Endpoint<GetMaldocRequest>
     {
 
         Verbs(Http.GET);
-        Routes("/api/files/{TargetId}");
+        Routes("/api/images/{TargetId}");
         AllowAnonymous();
         Describe(e => e
-            .Accepts<GetMaldocRequest>("application/json")
+            .Accepts<GetImageRequest>("application/json")
             .Produces(200)
             .ProducesProblem(401));
     }
 
-    public override async Task HandleAsync(GetMaldocRequest req, CancellationToken ct)
+    public override async Task HandleAsync(GetImageRequest req, CancellationToken ct)
     {
         var t = _targetsService.Targets.Find(t => t.Id == req.TargetId);
 
         Guard.Against.Null<Target>(t, "id", req.TargetId);
 
-        t!.DateDownloaded = DateTime.UtcNow;
-        t!.HasDownloaded = true;
+        t!.DateRead = DateTime.UtcNow;
+        t!.HasRead = true;
 
-        await SendBytesAsync(Convert.FromBase64String(t.Maldoc.Content), t.Maldoc.Filename);
+        await SendBytesAsync(new byte[5], t.Id);
     }
 }

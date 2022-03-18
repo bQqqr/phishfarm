@@ -8,6 +8,8 @@ public class Target
     public string FirstName { get; set; } = String.Empty;
     public string LastName { get; set; } = String.Empty;
     public string EmailAddress { get; set; } = String.Empty;
+    public DateTime DateSent { get; set; }
+    public bool IsSent { get; set; } = false;
     public DateTime DateRead { get; set; }
     public bool HasRead { get; set; } = false;
     public DateTime DateDownloaded { get; set; }

@@ -64,7 +64,7 @@ public class GetTokenEndpoint : Endpoint<GetTokenRequest, GetTokenResponse>
 
         Response.Token = JWTBearer.CreateToken(
                 signingKey: symmetricKey,
-                expireAt: DateTime.Now.AddMinutes(20),
+                expireAt: DateTime.UtcNow.AddMinutes(20),
                 roles: new[] { "Admin" });
 
         return Task.CompletedTask;

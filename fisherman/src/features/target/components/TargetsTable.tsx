@@ -3,14 +3,16 @@ import {
   Button,
   Divider,
   Heading,
+  HStack,
+  Tag,
   Text,
   useDisclosure,
+  VStack,
 } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Drawer, Form, Table } from 'app/components';
-import { targetsAtom } from 'app/global';
+import { campaignSettingsAtom, targetsAtom } from 'app/global';
 import { useCreateTarget, useDeleteTarget } from 'features/target';
-import { string } from 'yup';
 
 interface Props {
   isDisabled: boolean;
@@ -27,6 +29,7 @@ export const TargetsTable = ({ isDisabled }: Props) => {
   // Hooks
   const form = useForm<FormFields>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const campaign = useRecoilValue(campaignSettingsAtom);
   const targets = useRecoilValue(targetsAtom);
   const createCommand = useCreateTarget();
   const deleteCommand = useDeleteTarget();
@@ -131,20 +134,40 @@ export const TargetsTable = ({ isDisabled }: Props) => {
         <Table size="sm" variant="striped" mt={5}>
           <Table.Head>
             <Table.Row>
-              <Table.Column>GUID</Table.Column>
-              <Table.Column>First Name</Table.Column>
-              <Table.Column>Last Name</Table.Column>
+              <Table.Column>Target</Table.Column>
               <Table.Column>Email Address</Table.Column>
+              {campaign?.isLaunched ? (
+                <Table.Column>Status</Table.Column>
+              ) : (
+                <></>
+              )}
               <Table.Column>Actions</Table.Column>
             </Table.Row>
           </Table.Head>
           <Table.Body>
             {targets?.map((v, i) => (
               <Table.Row key={i}>
-                <Table.Cell>{v.id}</Table.Cell>
-                <Table.Cell>{v.firstName}</Table.Cell>
-                <Table.Cell>{v.lastName}</Table.Cell>
+                <Table.Cell>
+                  <VStack align="start">
+                    <HStack>
+                      <Text>{v.firstName}</Text>
+                      <Text>{v.lastName}</Text>
+                    </HStack>
+                    <Text fontWeight="thin">{v.id}</Text>
+                  </VStack>
+                </Table.Cell>
                 <Table.Cell>{v.emailAddress}</Table.Cell>
+                {campaign?.isLaunched ? (
+                  <Table.Cell>
+                    {v.isSent && <Tag colorScheme="blue">🛸 Sent</Tag>}{' '}
+                    {v.hasRead && <Tag colorScheme="green">📖 Read</Tag>}{' '}
+                    {v.hasDownloaded && (
+                      <Tag colorScheme="orange">🎻 Downloaded</Tag>
+                    )}
+                  </Table.Cell>
+                ) : (
+                  <></>
+                )}
                 <Table.Cell>
                   <Button
                     isDisabled={isDisabled}

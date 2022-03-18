@@ -79,6 +79,6 @@ public class LaunchCampaignEndpoint : Endpoint<LaunchCampaignRequest>
 
     private TimeSpan BetweenTodayAndDate(DateTime date)
     {
-        return TimeSpan.FromSeconds((date - DateTime.Now).TotalSeconds);
+        return TimeSpan.FromSeconds((date - DateTime.UtcNow).TotalSeconds);
     }
 }

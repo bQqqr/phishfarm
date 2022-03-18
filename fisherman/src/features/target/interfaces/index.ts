@@ -21,5 +21,11 @@ export interface Target {
   firstName: string;
   lastName: string;
   emailAddress: string;
+  dateSent: string;
+  isSent: boolean;
+  dateRead: string;
+  hasRead: boolean;
+  dateDownloaded: string;
+  hasDownloaded: boolean;
   maldoc: BlobFile;
 }

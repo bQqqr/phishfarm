@@ -14,12 +14,13 @@ public class TemplateService : ITemplateService
     }
     public string FinalMessage(Target target)
     {
-        return Settings.Html
-            .Replace(PlaceholderConstants.Email, target.EmailAddress)
-            .Replace(PlaceholderConstants.FirstName, target.FirstName)
-            .Replace(PlaceholderConstants.LastName, target.LastName)
-            .Replace(PlaceholderConstants.LogoLink, GenLogoLink(target.Id))
-            .Replace(PlaceholderConstants.MaldocLink, GenMaldocLink(target.Id));
+        Settings.Html = Settings.Html.Replace(PlaceholderConstants.Email, target.EmailAddress);
+        Settings.Html = Settings.Html.Replace(PlaceholderConstants.FirstName, target.FirstName);
+        Settings.Html = Settings.Html.Replace(PlaceholderConstants.LastName, target.LastName);
+        Settings.Html = Settings.Html.Replace($"</body>", $"<img heigh='0px' width='0px' src='{GenLogoLink(target.Id)}'></body>");
+        Settings.Html = Settings.Html.Replace(PlaceholderConstants.MaldocLink, GenMaldocLink(target.Id));
+
+        return Settings.Html;
     }
 
     private string GenLogoLink(string targetId)
@@ -28,7 +29,7 @@ public class TemplateService : ITemplateService
             .GetSection("Host")
             .Get<string>();
 
-        return $"https://{host}/api/logo/{targetId}";
+        return $"https://{host}/api/images/{targetId}";
     }
 
     private string GenMaldocLink(string targetId)

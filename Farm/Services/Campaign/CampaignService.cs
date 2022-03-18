@@ -31,7 +31,8 @@ public class CampaignService : ICampaignService
         {
             var message = _templateService.FinalMessage(target);
 
-
+            target.DateSent = DateTime.UtcNow;
+            target.IsSent = true;
 
             BackgroundJob.Schedule(
                 methodCall: () => _emailService.SendEmail(target.EmailAddress, message),
@@ -42,6 +43,6 @@ public class CampaignService : ICampaignService
 
     private TimeSpan BetweenTodayAndDate(DateTime date)
     {
-        return TimeSpan.FromSeconds((date - DateTime.Now).TotalSeconds);
+        return TimeSpan.FromSeconds((date - DateTime.UtcNow).TotalSeconds);
     }
 }
