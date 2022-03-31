@@ -13,16 +13,19 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var key = builder.Configuration.GetSection("SymmetricKey").Get<string>();
+
 builder.Host.UseSerilog((ctx, lc) => lc
     .WriteTo.Console());
 
 builder.Services.AddFastEndpoints();
-builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetSection("SymmetricKey").Get<string>());
+builder.Services.AddAuthenticationJWTBearer(key);
 builder.Services.AddSwaggerDoc();
 builder.Services.AddHangfire(c =>
 {
     c.UseMemoryStorage();
 });
+
 builder.Services.AddHangfireServer();
 builder.Services.AddEmailService();
 builder.Services.AddTemplateService();
