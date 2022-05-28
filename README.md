@@ -12,7 +12,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/christoskaltsas/phishfarm">
-    <img src=".github/assets/logo.jpg" alt="Logo" width="250" height="150">
+    <img src=".github/assets/logo.png" alt="Logo" width="650" height="350">
   </a>
   <h3 align="center">🎣🐟 Phishfarm</h3>
   <p align="center">
@@ -51,9 +51,8 @@
 ## Built With
 
 - [.net 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
-    - [fast endpoints](https://fast-endpoints.com/)
+  - [fast endpoints](https://fast-endpoints.com/)
 - [react](https://reactjs.org/)
-
 
 ## Todo
 
